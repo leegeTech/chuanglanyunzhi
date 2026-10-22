@@ -121,36 +121,20 @@ cloud-sdk-parent
 
 ### 认证机制
 
-Cloud SDK 使用 **appId + appSecret** 进行身份认证，不同业务线采用不同的签名算法：
-
-#### 短信业务
+Cloud SDK 使用 **appId + appSecret** 进行身份认证，采用统一应用 API Key 模式签名算法：
 
 ```java
 // 签名参数
-Nonce = 随机 UUID
-CurTime = 当前时间戳（秒）
-CheckSum = MD5(appSecret + Nonce + CurTime)
+Nonce = 32 位随机字符串
+CurTime = 当前时间戳（秒，有效期 5 分钟）
+CheckSum = SHA1(appSecret + Nonce + CurTime)
 
 // HTTP 请求头
-X-AppId: {appId}
-X-Nonce: {Nonce}
-X-CurTime: {CurTime}
-X-CheckSum: {CheckSum}
-Content-Type: application/json;charset=utf-8
-```
-
-#### 短信业务
-
-```java
-// 签名参数
-Timestamp = 当前时间戳（毫秒）
-Signature = MD5(appId + appSecret + Timestamp)
-
-// HTTP 请求头
-appId: {appId}
-timestamp: {Timestamp}
-sign: {Signature}
-Content-Type: application/json;charset=utf-8
+AppID: {appId}
+Nonce: {Nonce}
+CurTime: {CurTime}
+CheckSum: {CheckSum}
+Content-Type: application/json
 ```
 
 **重要说明**：
@@ -236,7 +220,7 @@ CloudApiConfig config = new CloudApiConfig()
     // 短信 endpoint
     .setSmsEndpoint("https://smssh.253.com")
     // 视频短信 endpoint
-    .setRcsSmsEndpoint("https://videoapi.253.com")
+    .setRcsSmsEndpoint("https://rcs.253.com")
     // 连接超时（毫秒）
     .setConnectTimeout(15000)
     // 读取超时（毫秒）
@@ -670,7 +654,7 @@ SmsBatchSendResponse response1 = client.batchSend(appId, appSecret, request);
 SmsBatchSendResponse response2 = client.batchSend(appId, appSecret, request, traceId);
 ```
 
-`traceId` 会添加到 HTTP 请求头 `X-Trace-Id`，用于分布式链路追踪和问题排查。
+`traceId` 会添加到 HTTP 请求头 `X-Custom-TraceId`（≤64 字符），用于分布式链路追踪和问题排查。
 
 ---
 

@@ -5,7 +5,7 @@ import "time"
 // 默认官方 endpoint
 const (
 	DefaultSmsEndpoint = "https://smssh.253.com"
-	DefaultRcsEndpoint = "https://videoapi.253.com"
+	DefaultRcsEndpoint = "https://rcs.253.com"
 )
 
 // CloudApiConfig 承载 SDK 的全局配置。

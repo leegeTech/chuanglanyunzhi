@@ -40,7 +40,7 @@ func NewWithConfig(cfg *CloudApiConfig) *CloudApiClient {
 	tcfg.MaxRetries = cfg.MaxRetries
 	tcfg.RetryBaseMs = cfg.RetryBaseIntervalMs
 
-	tr := transport.New(tcfg, transport.SMSAuthStamp)
+	tr := transport.New(tcfg, transport.SignStamp)
 	return &CloudApiClient{cfg: cfg, tr: tr}
 }
 
